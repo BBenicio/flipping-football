@@ -1,0 +1,77 @@
+[gd_scene load_steps=5 format=1]
+
+[ext_resource path="res://Themes/Menu.tres" type="Theme" id=1]
+[ext_resource path="res://Scripts/Notification.gd" type="Script" id=2]
+[ext_resource path="res://icon.png" type="Texture" id=3]
+
+[sub_resource type="StyleBoxFlat" id=1]
+
+content_margin/left = -1.0
+content_margin/right = -1.0
+content_margin/top = -1.0
+content_margin/bottom = -1.0
+bg_color = Color( 0, 0, 0, 0.501961 )
+light_color = Color( 0.8, 0.8, 0.8, 1 )
+dark_color = Color( 0.8, 0.8, 0.8, 1 )
+border_size = 0
+border_blend = true
+draw_bg = true
+
+[node name="Notification" type="Panel"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+theme/theme = ExtResource( 1 )
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 960.0
+margin/bottom = 200.0
+custom_styles/panel = SubResource( 1 )
+script/script = ExtResource( 2 )
+icon = null
+text = ""
+from = null
+to = null
+time = 1.0
+delay = 0.0
+
+[node name="Icon" type="TextureFrame" parent="."]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 10.0
+margin/top = 10.0
+margin/right = 190.0
+margin/bottom = 190.0
+texture = ExtResource( 3 )
+expand = true
+stretch_mode = 0
+
+[node name="Text" type="Label" parent="."]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 200.0
+margin/top = 10.0
+margin/right = 950.0
+margin/bottom = 190.0
+text = "Flipping Football"
+autowrap = true
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Tween" type="Tween" parent="."]
+
+playback/process_mode = 1
+playback/active = false
+playback/repeat = false
+playback/speed = 1.0
+
+

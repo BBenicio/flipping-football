@@ -1,0 +1,56 @@
+[gd_scene load_steps=3 format=1]
+
+[ext_resource path="res://Themes/Menu.tres" type="Theme" id=1]
+[ext_resource path="res://Scripts/ButtonRange.gd" type="Script" id=2]
+
+[node name="ButtonRange" type="Control"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+theme/theme = ExtResource( 1 )
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 564.0
+margin/bottom = 64.0
+script/script = ExtResource( 2 )
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 500.0
+margin/bottom = 64.0
+range/min = 0.0
+range/max = 10.0
+range/step = 1.0
+range/page = 0.0
+range/value = 0.0
+range/exp_edit = false
+range/rounded = false
+percent/visible = false
+
+[node name="Plus" type="Button" parent="."]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 500.0
+margin/top = 0.0
+margin/right = 564.0
+margin/bottom = 64.0
+toggle_mode = false
+enabled_focus_mode = 0
+shortcut = null
+text = "+"
+flat = false
+
+[connection signal="pressed" from="Plus" to="." method="plus"]
+
+

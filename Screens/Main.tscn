@@ -1,0 +1,354 @@
+[gd_scene load_steps=25 format=1]
+
+[ext_resource path="res://Scripts/Main.gd" type="Script" id=1]
+[ext_resource path="res://Images/Background.png" type="Texture" id=2]
+[ext_resource path="res://Images/Light.png" type="Texture" id=3]
+[ext_resource path="res://Objects/Walls.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Objects/Field.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Objects/Ball.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Images/You.png" type="Texture" id=7]
+[ext_resource path="res://Objects/Player.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Objects/AI.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Objects/Goal.tscn" type="PackedScene" id=10]
+[ext_resource path="res://Fonts/Montserrat48.tres" type="DynamicFont" id=11]
+[ext_resource path="res://Fonts/Montserrat128.tres" type="DynamicFont" id=12]
+[ext_resource path="res://Images/LeftButton.png" type="Texture" id=13]
+[ext_resource path="res://Images/LeftButtonPressed.png" type="Texture" id=14]
+[ext_resource path="res://Images/RightButton.png" type="Texture" id=15]
+[ext_resource path="res://Images/RightButtonPressed.png" type="Texture" id=16]
+[ext_resource path="res://Objects/FPSLabel.tscn" type="PackedScene" id=17]
+[ext_resource path="res://Scripts/Pause.gd" type="Script" id=18]
+[ext_resource path="res://Images/Tint.png" type="Texture" id=19]
+[ext_resource path="res://Images/Pause.png" type="Texture" id=20]
+[ext_resource path="res://Images/Play.png" type="Texture" id=21]
+[ext_resource path="res://Themes/Menu.tres" type="Theme" id=22]
+
+[sub_resource type="ConvexPolygonShape2D" id=1]
+
+custom_solver_bias = 0.0
+points = Vector2Array( -75, -75, 150, -75, 150, 75, -75, 75, -150, 0 )
+
+[sub_resource type="ConvexPolygonShape2D" id=2]
+
+custom_solver_bias = 0.0
+points = Vector2Array( 75, -75, -150, -75, -150, 75, 75, 75, 150, 0 )
+
+[node name="Main" type="Node"]
+
+script/script = ExtResource( 1 )
+
+[node name="Bg" type="Sprite" parent="."]
+
+transform/pos = Vector2( -1, 0 )
+texture = ExtResource( 2 )
+centered = false
+
+[node name="Light" type="Sprite" parent="."]
+
+editor/display_folded = true
+transform/pos = Vector2( 960, 0 )
+texture = ExtResource( 3 )
+modulate = Color( 1, 1, 1, 0 )
+
+[node name="Tween" type="Tween" parent="Light"]
+
+playback/process_mode = 1
+playback/active = false
+playback/repeat = false
+playback/speed = 1.0
+
+[node name="Walls" parent="." instance=ExtResource( 4 )]
+
+[node name="Field" parent="." instance=ExtResource( 5 )]
+
+[node name="Ball" parent="." instance=ExtResource( 6 )]
+
+transform/pos = Vector2( 960, 300 )
+mass = 0.3
+damp_override/angular = 0.0
+
+[node name="Indicator" type="Sprite" parent="."]
+
+transform/pos = Vector2( 450, 664 )
+texture = ExtResource( 7 )
+
+[node name="Tween" type="Tween" parent="Indicator"]
+
+playback/process_mode = 1
+playback/active = false
+playback/repeat = false
+playback/speed = 1.0
+
+[node name="Left Player" parent="." instance=ExtResource( 8 )]
+
+transform/pos = Vector2( 450, 784 )
+
+[node name="Right Player" parent="." instance=ExtResource( 9 )]
+
+ballPath = NodePath("../Ball")
+
+[node name="Left Goal" parent="." instance=ExtResource( 10 )]
+
+transform/pos = Vector2( 100, 750 )
+transform/scale = Vector2( -1, 1 )
+
+[node name="Right Goal" parent="." instance=ExtResource( 10 )]
+
+transform/pos = Vector2( 1820, 750 )
+
+[node name="Goal Timer" type="Timer" parent="."]
+
+process_mode = 1
+wait_time = 2.0
+one_shot = true
+autostart = false
+
+[node name="Clock Timer" type="Timer" parent="."]
+
+process_mode = 1
+wait_time = 1.0
+one_shot = false
+autostart = true
+
+[node name="HUD" type="Control" parent="."]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 40.0
+margin/bottom = 40.0
+
+[node name="Clock" type="Label" parent="HUD"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 911.0
+margin/top = 10.0
+margin/right = 1012.0
+margin/bottom = 71.0
+custom_fonts/font = ExtResource( 11 )
+text = "90"
+align = 1
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Score" type="Label" parent="HUD"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 807.0
+margin/top = 75.0
+margin/right = 1114.0
+margin/bottom = 232.0
+custom_fonts/font = ExtResource( 12 )
+text = "0 - 0"
+align = 1
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Goal" type="Label" parent="HUD"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = -372.0
+margin/top = 450.0
+margin/right = 0.0
+margin/bottom = 607.0
+custom_fonts/font = ExtResource( 12 )
+text = "Goal"
+uppercase = true
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Goal Tween" type="Tween" parent="HUD"]
+
+playback/process_mode = 1
+playback/active = false
+playback/repeat = false
+playback/speed = 1.0
+
+[node name="MobileControls" type="Node" parent="."]
+
+editor/display_folded = true
+
+[node name="Left" type="TouchScreenButton" parent="MobileControls"]
+
+transform/pos = Vector2( 200, 880 )
+normal = ExtResource( 13 )
+pressed = ExtResource( 14 )
+bitmask = null
+shape = SubResource( 1 )
+shape_centered = true
+shape_visible = true
+passby_press = false
+action = "left"
+visibility_mode = 1
+
+[node name="Right" type="TouchScreenButton" parent="MobileControls"]
+
+transform/pos = Vector2( 1414, 880 )
+normal = ExtResource( 15 )
+pressed = ExtResource( 16 )
+bitmask = null
+shape = SubResource( 2 )
+shape_centered = true
+shape_visible = true
+passby_press = false
+action = "right"
+visibility_mode = 1
+
+[node name="FPS" parent="." instance=ExtResource( 17 )]
+
+timeout = 0.5
+
+[node name="PauseThings" type="Node" parent="."]
+
+process/pause_mode = 2
+script/script = ExtResource( 18 )
+
+[node name="Tint" type="TextureFrame" parent="PauseThings"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 1920.0
+margin/bottom = 1080.0
+texture = ExtResource( 19 )
+modulate = Color( 1, 1, 1, 0 )
+expand = true
+stretch_mode = 0
+
+[node name="PauseButton" type="TextureButton" parent="PauseThings"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 10.0
+margin/top = 10.0
+margin/right = 80.0
+margin/bottom = 80.0
+toggle_mode = true
+enabled_focus_mode = 0
+shortcut = null
+textures/normal = ExtResource( 20 )
+textures/pressed = ExtResource( 21 )
+params/resize_mode = 0
+params/stretch_mode = 0
+
+[node name="Tween" type="Tween" parent="PauseThings"]
+
+playback/process_mode = 1
+playback/active = false
+playback/repeat = false
+playback/speed = 1.0
+
+[node name="Menu" type="Control" parent="PauseThings"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 1920.0
+margin/top = 0.0
+margin/right = 3840.0
+margin/bottom = 1080.0
+
+[node name="Label" type="Label" parent="PauseThings/Menu"]
+
+anchor/left = 3
+anchor/top = 3
+anchor/right = 3
+anchor/bottom = 3
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 300.0
+margin/top = 300.0
+margin/right = -300.0
+margin/bottom = 100.0
+custom_fonts/font = ExtResource( 12 )
+text = "Paused"
+align = 1
+valign = 1
+uppercase = true
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="ResumeButton" type="Button" parent="PauseThings/Menu"]
+
+anchor/left = 3
+anchor/top = 3
+anchor/right = 3
+anchor/bottom = 3
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+theme/theme = ExtResource( 22 )
+margin/left = 200.0
+margin/top = 50.0
+margin/right = -200.0
+margin/bottom = -50.0
+toggle_mode = false
+enabled_focus_mode = 0
+shortcut = null
+text = "Resume Match"
+flat = false
+
+[node name="MenuButton" type="Button" parent="PauseThings/Menu"]
+
+anchor/left = 3
+anchor/top = 3
+anchor/right = 3
+anchor/bottom = 3
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+theme/theme = ExtResource( 22 )
+margin/left = 200.0
+margin/top = -70.0
+margin/right = -200.0
+margin/bottom = -170.0
+toggle_mode = false
+enabled_focus_mode = 0
+shortcut = null
+text = "Back to Menu"
+flat = false
+
+[connection signal="body_enter" from="Left Goal" to="." method="_on_Left_Goal_body_enter"]
+
+[connection signal="body_enter" from="Right Goal" to="." method="_on_Right_Goal_body_enter"]
+
+[connection signal="timeout" from="Goal Timer" to="." method="setResetTrue"]
+
+[connection signal="timeout" from="Clock Timer" to="." method="clockTick"]
+
+[connection signal="toggled" from="PauseThings/PauseButton" to="PauseThings" method="pauseButtonToggled"]
+
+[connection signal="pressed" from="PauseThings/Menu/ResumeButton" to="PauseThings" method="resumeButtonPressed"]
+
+[connection signal="pressed" from="PauseThings/Menu/MenuButton" to="PauseThings" method="menuButtonPressed"]
+
+
