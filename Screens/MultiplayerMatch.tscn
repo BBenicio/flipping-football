@@ -1,0 +1,101 @@
+[gd_scene load_steps=13 format=1]
+
+[ext_resource path="res://Scripts/MultiplayerMatch.gd" type="Script" id=1]
+[ext_resource path="res://Images/Background.png" type="Texture" id=2]
+[ext_resource path="res://Images/Light.png" type="Texture" id=3]
+[ext_resource path="res://Objects/Walls.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Objects/Field.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Objects/Ball.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Images/You.png" type="Texture" id=7]
+[ext_resource path="res://Objects/Player.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Objects/Goal.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Objects/HUD.tscn" type="PackedScene" id=10]
+[ext_resource path="res://Objects/MobileControls.tscn" type="PackedScene" id=11]
+[ext_resource path="res://Objects/FPSLabel.tscn" type="PackedScene" id=12]
+
+[node name="MultiplayerMatch" type="Node"]
+
+script/script = ExtResource( 1 )
+ballUpdateInterval = 0.0
+timeout = 4
+
+[node name="Bg" type="Sprite" parent="."]
+
+texture = ExtResource( 2 )
+centered = false
+
+[node name="Light" type="Sprite" parent="."]
+
+transform/pos = Vector2( 960, 0 )
+texture = ExtResource( 3 )
+modulate = Color( 1, 1, 1, 0 )
+
+[node name="Tween" type="Tween" parent="Light"]
+
+playback/process_mode = 1
+playback/active = false
+playback/repeat = false
+playback/speed = 1.0
+
+[node name="Walls" parent="." instance=ExtResource( 4 )]
+
+[node name="Field" parent="." instance=ExtResource( 5 )]
+
+[node name="Ball" parent="." instance=ExtResource( 6 )]
+
+transform/pos = Vector2( 960, 300 )
+
+[node name="Indicator" type="Sprite" parent="."]
+
+editor/display_folded = true
+texture = ExtResource( 7 )
+
+[node name="Tween" type="Tween" parent="Indicator"]
+
+playback/process_mode = 1
+playback/active = false
+playback/repeat = false
+playback/speed = 1.0
+
+[node name="Host" parent="." instance=ExtResource( 8 )]
+
+transform/pos = Vector2( 450, 780 )
+
+[node name="Client" parent="." instance=ExtResource( 8 )]
+
+transform/pos = Vector2( 1470, 780 )
+
+[node name="Host Goal" parent="." instance=ExtResource( 9 )]
+
+transform/pos = Vector2( 100, 750 )
+transform/scale = Vector2( -1, 1 )
+
+[node name="Client Goal" parent="." instance=ExtResource( 9 )]
+
+transform/pos = Vector2( 1820, 750 )
+
+[node name="Goal Timer" type="Timer" parent="."]
+
+process_mode = 1
+wait_time = 2.0
+one_shot = true
+autostart = false
+
+[node name="Clock Timer" type="Timer" parent="."]
+
+process_mode = 1
+wait_time = 1.0
+one_shot = false
+autostart = false
+
+[node name="HUD" parent="." instance=ExtResource( 10 )]
+
+[node name="MobileControls" parent="." instance=ExtResource( 11 )]
+
+[node name="FPS" parent="." instance=ExtResource( 12 )]
+
+visibility/visible = true
+
+[connection signal="timeout" from="Goal Timer" to="." method="setResetTrue"]
+
+

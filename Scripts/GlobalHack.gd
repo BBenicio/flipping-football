@@ -1,63 +1,78 @@
 extends Node
 
+const VERSION = 3
+const SAVE_FILE = "user://savegame.sav"
+const PASS = "io.benic.flippingfootball"
+
+var player = {
+	skin = Color("ffb380"),
+	hair = 1,
+	hairColor = Color(0.1, 0.1, 0.1),
+	shirt = Color(0, 0, 0.67),
+	shorts = Color(0.8, 0.8, 0.8),
+	shoes = Color(0.2, 0.2, 0.2),
+
+	distance = 0,
+	height = 0,
+	speed = 0,
+
+	name = "My Team"
+}
+
+var league = {
+	table = null,
+	matches = null,
+	week = 0
+}
+
+var money = 100
 
 func _ready():
-	if not Globals.has("debugging"):
-		Globals.set("debugging", true)
-		Globals.set_persisting("debugging", true)
+	if VERSION == 3:
+		if Globals.has("money"):
+			Globals.set_persisting("debugging", false)
+			Globals.set_persisting("player/skin", false)
+			Globals.set_persisting("player/hair", false)
+			Globals.set_persisting("player/hairColor", false)
+			Globals.set_persisting("player/shirt", false)
+			Globals.set_persisting("player/shorts", false)
+			Globals.set_persisting("player/shoes", false)
+			Globals.set_persisting("player/distance", false)
+			Globals.set_persisting("player/height", false)
+			Globals.set_persisting("player/speed", false)
+			Globals.set_persisting("player/name", false)
+			Globals.set_persisting("money", false)
+			Globals.set_persisting("league/table", false)
+			Globals.set_persisting("league/matches", false)
+			Globals.set_persisting("league/round", false)
+			Globals.set_persisting("league/reset", false)
 
-	if not Globals.has("player/skin") or Globals.get("debugging"):
-		Globals.set("player/skin", Color("ffb380"))
-		Globals.set_persisting("player/skin", true)
+			Globals.save()
 
-		Globals.set("player/hair", 1)
-		Globals.set_persisting("player/hair", true)
+			player["skin"] = Globals.get("player/skin")
+			player["hair"] = Globals.get("player/hair")
+			player["hairColor"] = Globals.get("player/hairColor")
+			player["shirt"] = Globals.get("player/shirt")
+			player["shorts"] = Globals.get("player/shorts")
+			player["shoes"] = Globals.get("player/shoes")
+			player["distance"] = Globals.get("player/distance")
+			player["height"] = Globals.get("player/height")
+			player["speed"] = Globals.get("player/speed")
+			player["name"] = Globals.get("player/name")
 
-		Globals.set("player/hairColor", Color(0.1, 0.1, 0.1))
-		Globals.set_persisting("player/hairColor", true)
+			league["table"] = Globals.get("league/table")
+			league["matches"] = Globals.get("league/matches")
+			league["week"] = Globals.get("league/round")
 
-		Globals.set("player/shirt", Color(0, 0, 0.67))
-		Globals.set_persisting("player/shirt", true)
+			money = Globals.get("money")
 
-		Globals.set("player/shorts", Color(0.8, 0.8, 0.8))
-		Globals.set_persisting("player/shorts", true)
+		loadGame()
 
-		Globals.set("player/shoes", Color(0.2, 0.2, 0.2))
-		Globals.set_persisting("player/shoes", true)
+		if league["table"] == null:
+			resetLeague()
+			resetMatches()
 
-		Globals.set("player/distance", 0)
-		Globals.set_persisting("player/distance", true)
-
-		Globals.set("player/height", 0)
-		Globals.set_persisting("player/height", true)
-
-		Globals.set("player/speed", 0)
-		Globals.set_persisting("player/speed", true)
-
-	if not Globals.has("player/name") or Globals.get("debugging"):
-		Globals.set("player/name", "My Team")
-		Globals.set_persisting("player/name", true)
-
-	if not Globals.has("money") or Globals.get("debugging"):
-		Globals.set("money", 100)
-		Globals.set_persisting("money", true)
-
-	if not Globals.has("league/table") or Globals.get("debugging"):
-		resetLeague()
-
-		Globals.set_persisting("league/table", true)
-
-	if not Globals.has("league/matches") or Globals.get("debugging"):
-		resetMatches()
-
-		Globals.set_persisting("league/matches", true)
-		Globals.set_persisting("league/round", true)
-
-	if not Globals.has("league/reset") or Globals.get("debugging"):
-		Globals.set("league/reset", false)
-		Globals.set_persisting("league/reset", true)
-
-	Globals.save()
+		saveGame()
 
 func resetLeague():
 	var file = File.new()
@@ -76,7 +91,7 @@ func resetLeague():
 
 	file.close()
 
-	Globals.set("league/table", table)
+	league["table"] = table
 
 func resetMatches():
 	var matches = []
@@ -91,5 +106,50 @@ func resetMatches():
 
 	file.close()
 
-	Globals.set("league/matches", matches)
-	Globals.set("league/round", 0)
+	league["matches"] = matches
+	league["week"] = 0
+
+func saveGame():
+	var file = File.new()
+	file.open_encrypted_with_pass(SAVE_FILE, File.WRITE, PASS)
+
+	var saveDict = {}
+	saveDict["player"] = player
+	saveDict["league"] = league
+	saveDict["money"] = money
+
+	file.store_var(saveDict.to_json())
+
+	file.close()
+
+func loadGame():
+	var file = File.new()
+	file.open_encrypted_with_pass(SAVE_FILE, File.READ, PASS)
+
+	var saveDict = {}
+	saveDict["player"] = player
+	saveDict["league"] = league
+	saveDict["money"] = money
+
+	var cont = file.get_var()
+	if cont == null:
+		file.close()
+		return
+
+	saveDict.parse_json(cont)
+
+	player = saveDict["player"]
+	league = saveDict["league"]
+	money = saveDict["money"]
+
+	player["skin"] = colorFromCsv(player["skin"])
+	player["hairColor"] = colorFromCsv(player["hairColor"])
+	player["shirt"] = colorFromCsv(player["shirt"])
+	player["shorts"] = colorFromCsv(player["shorts"])
+	player["shoes"] = colorFromCsv(player["shoes"])
+
+	file.close()
+
+func colorFromCsv(csv):
+	var arr = csv.split_floats(",")
+	return Color(arr[0], arr[1], arr[2], arr[3])

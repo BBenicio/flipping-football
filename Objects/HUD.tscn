@@ -1,0 +1,78 @@
+[gd_scene load_steps=3 format=1]
+
+[ext_resource path="res://Fonts/Montserrat48.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Fonts/Montserrat128.tres" type="DynamicFont" id=2]
+
+[node name="HUD" type="Control"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 40.0
+margin/bottom = 40.0
+
+[node name="Clock" type="Label" parent="."]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 911.0
+margin/top = 10.0
+margin/right = 1012.0
+margin/bottom = 71.0
+custom_fonts/font = ExtResource( 1 )
+text = "90"
+align = 1
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Score" type="Label" parent="."]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 807.0
+margin/top = 75.0
+margin/right = 1114.0
+margin/bottom = 232.0
+custom_fonts/font = ExtResource( 2 )
+text = "0 - 0"
+align = 1
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Goal" type="Label" parent="."]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = -372.0
+margin/top = 450.0
+margin/right = 0.0
+margin/bottom = 607.0
+custom_fonts/font = ExtResource( 2 )
+text = "Goal"
+uppercase = true
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Goal Tween" type="Tween" parent="."]
+
+playback/process_mode = 1
+playback/active = false
+playback/repeat = false
+playback/speed = 1.0
+
+

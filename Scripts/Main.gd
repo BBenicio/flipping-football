@@ -19,6 +19,8 @@ var lightTween = null
 var clock = null
 var score = null
 
+var globals = null
+
 var reset = false
 var resetPhase = 0
 var gameOver = false
@@ -32,6 +34,8 @@ var ballLastPosition = null
 
 func _ready():
 	randomize()
+
+	globals = get_node("/root/GlobalHack")
 
 	ball = get_node("Ball")
 	leftPlayer = get_node("Left Player")
@@ -55,13 +59,13 @@ func _ready():
 		lightTween.interpolate_property(light, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), time, Tween.TRANS_QUAD, Tween.EASE_OUT, 2 * i * time)
 		lightTween.interpolate_property(light, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), time, Tween.TRANS_QUAD, Tween.EASE_IN, (2 * i + 1) * time)
 
-	leftPlayer.setKit(Globals.get("player/shirt"), Globals.get("player/shorts"), Globals.get("player/shoes"))
-	leftPlayer.setSkin(Globals.get("player/skin"))
-	leftPlayer.setHair(Globals.get("player/hair"), Globals.get("player/hairColor"))
+	leftPlayer.setKit(globals.player["shirt"], globals.player["shorts"], globals.player["shoes"])
+	leftPlayer.setSkin(globals.player["skin"])
+	leftPlayer.setHair(globals.player["hair"], globals.player["hairColor"])
 
-	leftPlayer.distance = Globals.get("player/distance")
-	leftPlayer.height = Globals.get("player/height")
-	leftPlayer.speed = Globals.get("player/speed")
+	leftPlayer.distance = globals.player["distance"]
+	leftPlayer.height = globals.player["height"]
+	leftPlayer.speed = globals.player["speed"]
 
 	setupAi()
 
@@ -77,9 +81,9 @@ func setupAi():
 	var hairColors = ["a91e10", "ded638", "56280f", "161616"]
 
 	if Globals.get("quickMatch"):
-		rightPlayer.player.distance = Globals.get("player/distance")
-		rightPlayer.player.height = Globals.get("player/height")
-		rightPlayer.player.speed = Globals.get("player/speed")
+		rightPlayer.player.distance = globals.player["distance"]
+		rightPlayer.player.height = globals.player["height"]
+		rightPlayer.player.speed = globals.player["speed"]
 		rightPlayer.level = rightPlayer.Level.BASIC if randf() < 0.5 else rightPlayer.Level.SIMPLE
 		rightPlayer.player.setKit(Color(randf(), randf(), randf()), Color(randf(), randf(), randf()), Color(randf(), randf(), randf()))
 
@@ -113,11 +117,6 @@ func setupAi():
 		file.close()
 
 func _input(event):
-	if Globals.get("debugging") and event.type == InputEvent.KEY and event.scancode == KEY_R:
-		reset = true
-	elif Globals.get("debugging") and event.type == InputEvent.KEY and event.scancode == KEY_0:
-		timeLeft = 1
-
 	if event.is_action_pressed("left"):
 		leftPlayer.backFlip = true
 	elif event.is_action_released("left"):

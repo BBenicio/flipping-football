@@ -45,7 +45,6 @@ centered = false
 
 [node name="Light" type="Sprite" parent="."]
 
-editor/display_folded = true
 transform/pos = Vector2( 960, 0 )
 texture = ExtResource( 3 )
 modulate = Color( 1, 1, 1, 0 )
@@ -219,6 +218,7 @@ timeout = 0.5
 [node name="PauseThings" type="Node" parent="."]
 
 process/pause_mode = 2
+editor/display_folded = true
 script/script = ExtResource( 18 )
 
 [node name="Tint" type="TextureFrame" parent="PauseThings"]

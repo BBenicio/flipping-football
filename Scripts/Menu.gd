@@ -10,6 +10,8 @@ var moneyLabel = null
 
 var notification = null
 
+var globals = null
+
 func _ready():
 	mainMenu = get_node("MainMenu")
 	kitMenu = get_node("KitMenu")
@@ -19,7 +21,9 @@ func _ready():
 
 	notification = get_node("Notification")
 
-	moneyLabel.set_text("$ " + str(Globals.get("money")))
+	globals = get_node("/root/GlobalHack")
+
+	moneyLabel.set_text("$ " + str(globals.money))
 
 	tween.interpolate_property(mainMenu, "rect/pos", Vector2(1920, 0), Vector2(0, 0), TRANSITION_TIME, Tween.TRANS_QUAD, Tween.EASE_OUT)
 	tween.start()
@@ -41,16 +45,10 @@ func _ready():
 		notification.set_text("You earned $ " + str(prize) + text)
 		notification.pop()
 
-		Globals.set("money", Globals.get("money") + prize)
-		moneyLabel.set_text("$ " + str(Globals.get("money")))
+		globals.money += prize
+		moneyLabel.set_text("$ " + str(globals.money))
 
 		Globals.set("match/prizeGiven", true)
-
-	if Globals.get("league/reset"):
-		get_node("GlobalsHack").resetLeague()
-		get_node("GlobalsHack").resetMatches()
-
-		Globals.set("league/reset", false)
 
 
 func quickMatch(a, b):
@@ -81,18 +79,18 @@ func kitMenuDone():
 	tween.interpolate_property(kitMenu, "rect/pos", kitMenu.get_pos(), Vector2(1920, 0), TRANSITION_TIME, Tween.TRANS_QUAD, Tween.EASE_OUT)
 	tween.start()
 
-	moneyLabel.set_text("$ " + str(Globals.get("money")))
+	moneyLabel.set_text("$ " + str(globals.money))
 
-	Globals.save()
+	globals.saveGame()
 
 func playerMenuDone():
 	tween.interpolate_property(mainMenu, "rect/pos", mainMenu.get_pos(), Vector2(0, 0), TRANSITION_TIME, Tween.TRANS_QUAD, Tween.EASE_OUT, TRANSITION_TIME)
 	tween.interpolate_property(playerMenu, "rect/pos", playerMenu.get_pos(), Vector2(1920, 0), TRANSITION_TIME, Tween.TRANS_QUAD, Tween.EASE_OUT)
 	tween.start()
 
-	moneyLabel.set_text("$ " + str(Globals.get("money")))
+	moneyLabel.set_text("$ " + str(globals.money))
 
-	Globals.save()
+	globals.saveGame()
 
 func leagueButtonPressed():
 	tween.interpolate_property(mainMenu, "rect/pos", mainMenu.get_pos(), Vector2(1920, 0), TRANSITION_TIME, Tween.TRANS_QUAD, Tween.EASE_OUT)
@@ -101,3 +99,11 @@ func leagueButtonPressed():
 
 func league(a, b):
 	get_tree().change_scene("res://Screens/League.tscn")
+
+func multiplayerButtonPressed():
+	tween.interpolate_property(mainMenu, "rect/pos", mainMenu.get_pos(), Vector2(1920, 0), TRANSITION_TIME, Tween.TRANS_QUAD, Tween.EASE_OUT)
+	tween.connect("tween_complete", self, "multiplayer")
+	tween.start()
+
+func multiplayer(a, b):
+	get_tree().change_scene("res://Screens/Multiplayer.tscn")

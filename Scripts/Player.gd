@@ -7,6 +7,8 @@ const FLIP_TIME = 1.0
 const MIN_X = 120
 const MAX_X = 1920 - MIN_X
 
+signal started_flipping(dir)
+
 var backFlip = null
 var frontFlip = null
 var isFlipping = false
@@ -97,6 +99,8 @@ func flip(dir):
 
 	if move == 0:
 		return
+
+	emit_signal("started_flipping", sign(move))
 
 	isFlipping = true
 

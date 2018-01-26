@@ -19,6 +19,8 @@ var doneButton = null
 
 var player = null
 
+var globals = null
+
 func _ready():
 	player = get_node("Player")
 
@@ -27,6 +29,8 @@ func _ready():
 	shoesTab = get_node("KitTabContainer/Shoes")
 
 	doneButton = get_node("DoneButton")
+
+	globals = get_node("/root/GlobalHack")
 
 	setup()
 
@@ -42,23 +46,23 @@ func updateCost():
 	else:
 		doneButton.set_text("Done")
 
-	if cost > Globals.get("money"):
+	if cost > globals.money:
 		doneButton.set_disabled(true)
 
 func setup():
-	shirtTab.get_node("ColorPicker").setColor(Globals.get("player/shirt"))
-	shortsTab.get_node("ColorPicker").setColor(Globals.get("player/shorts"))
-	shoesTab.get_node("ColorPicker").setColor(Globals.get("player/shoes"))
+	shirtTab.get_node("ColorPicker").setColor(globals.player["shirt"])
+	shortsTab.get_node("ColorPicker").setColor(globals.player["shorts"])
+	shoesTab.get_node("ColorPicker").setColor(globals.player["shoes"])
 
 	changedShirt = false
 	changedShorts = false
 	changedShoes = false
 
-	player.setKit(Globals.get("player/shirt"), Globals.get("player/shorts"), Globals.get("player/shoes"))
-	player.setSkin(Globals.get("player/skin"))
-	player.setHair(Globals.get("player/hair"), Globals.get("player/hairColor"))
+	player.setKit(globals.player["shirt"], globals.player["shorts"], globals.player["shoes"])
+	player.setSkin(globals.player["skin"])
+	player.setHair(globals.player["hair"], globals.player["hairColor"])
 
-	get_node("KitTabContainer/Name/LineEdit").set_text(Globals.get("player/name"))
+	get_node("KitTabContainer/Name/LineEdit").set_text(globals.player["name"])
 
 	doneButton.set_disabled(false)
 
@@ -67,7 +71,7 @@ func setup():
 func shirtColorChanged(color):
 	player.setKit(color, null, null)
 
-	var c = Globals.get("player/shirt")
+	var c = globals.player["shirt"]
 	changedShirt = abs(color.r - c.r) >= 0.01 or abs(color.g - c.g) >= 0.01 or abs(color.b - c.b) >= 0.01
 	#changedShirt = color != Globals.get("player/shirt")
 	updateCost()
@@ -75,7 +79,7 @@ func shirtColorChanged(color):
 func shortsColorChanged(color):
 	player.setKit(null, color, null)
 
-	var c = Globals.get("player/shorts")
+	var c = globals.player["shorts"]
 	changedShorts = abs(color.r - c.r) < 0.01 or abs(color.g - c.g) < 0.01 or abs(color.b - c.b) < 0.01
 	#changedShorts = color != Globals.get("player/shorts")
 	updateCost()
@@ -83,21 +87,21 @@ func shortsColorChanged(color):
 func shoesColorChanged(color):
 	player.setKit(null, null, color)
 
-	var c = Globals.get("player/shoes")
+	var c = globals.player["shoes"]
 	changedShoes = abs(color.r - c.r) < 0.01 or abs(color.g - c.g) < 0.01 or abs(color.b - c.b) < 0.01
 	#changedShoes = color != Globals.get("player/shoes")
 	updateCost()
 
 func doneButtonPressed():
-	Globals.set("player/shirt", shirtTab.get_node("ColorPicker").color)
-	Globals.set("player/shorts", shortsTab.get_node("ColorPicker").color)
-	Globals.set("player/shoes", shoesTab.get_node("ColorPicker").color)
+	globals.player["shirt"] = shirtTab.get_node("ColorPicker").color
+	globals.player["shorts"] = shortsTab.get_node("ColorPicker").color
+	globals.player["shoes"] = shoesTab.get_node("ColorPicker").color
 
-	Globals.set("money", Globals.get("money") - cost)
+	globals.money -= cost
 
 	var name = get_node("KitTabContainer/Name/LineEdit").get_text()
 	if not name.empty():
-		Globals.set("player/name", name)
+		globals.player["name"] = name
 
 	emit_signal("done")
 

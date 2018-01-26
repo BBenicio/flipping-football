@@ -18,6 +18,8 @@ var speedRange = null
 
 var doneButton = null
 
+var globals = null
+
 var changeSkin = false
 var changeHairStyle = false
 var changeHairColor = false
@@ -43,6 +45,8 @@ func _ready():
 
 	doneButton = get_node("DoneButton")
 
+	globals = get_node("/root/GlobalHack")
+
 	distanceRange.set_max(5)
 	heightRange.set_max(5)
 	speedRange.set_max(5)
@@ -50,29 +54,26 @@ func _ready():
 	setup()
 
 func setup():
-	skinColorPicker.setColor(Globals.get("player/skin"))
-	hairColorPicker.setColor(Globals.get("player/hairColor"))
-	hairStyleOption.select(Globals.get("player/hair"))
+	skinColorPicker.setColor(globals.player["skin"])
+	hairColorPicker.setColor(globals.player["hairColor"])
+	hairStyleOption.select(globals.player["hair"])
 
-	distanceRange.set_value(Globals.get("player/distance"))
-	heightRange.set_value(Globals.get("player/height"))
-	speedRange.set_value(Globals.get("player/speed"))
+	distanceRange.set_value(globals.player["distance"])
+	heightRange.set_value(globals.player["height"])
+	speedRange.set_value(globals.player["speed"])
 
-	if Globals.get("money") < 100:
+	if globals.money < 100:
 		distanceRange.set_disabled(true)
 		heightRange.set_disabled(true)
 		speedRange.set_disabled(true)
 
-	hairStyleOption.select(Globals.get("player/hair"))
-	hairColorPicker.setColor(Globals.get("player/hairColor"))
-	skinColorPicker.setColor(Globals.get("player/skin"))
+	player.setKit(globals.player["shirt"], globals.player["shorts"], globals.player["shoes"])
+	player.setSkin(globals.player["skin"])
+	player.setHair(globals.player["hair"], globals.player["hairColor"])
 
-	player.setKit(Globals.get("player/shirt"), Globals.get("player/shorts"), Globals.get("player/shoes"))
-	player.setHair(Globals.get("player/hair"), Globals.get("player/hairColor"))
-
-	distanceRange.set_value(Globals.get("player/distance"))
-	heightRange.set_value(Globals.get("player/height"))
-	speedRange.set_value(Globals.get("player/speed"))
+	distanceRange.set_value(globals.player["distance"])
+	heightRange.set_value(globals.player["height"])
+	speedRange.set_value(globals.player["speed"])
 
 	changeDistance = 0
 	changeHeight = 0
@@ -94,18 +95,18 @@ func updateCost():
 	else:
 		doneButton.set_text("Done")
 
-	doneButton.set_disabled(cost > Globals.get("money"))
+	doneButton.set_disabled(cost > globals.money)
 
 func styleOptionButtonItemSelected(id):
 	player.setHair(id, null)
 
-	changeHairStyle = id != Globals.get("player/hair")
+	changeHairStyle = id != globals.player["hair"]
 	updateCost()
 
 func hairColorChanged( color ):
 	player.setHair(null, color)
 
-	var c = Globals.get("player/hairColor")
+	var c = globals.player["hairColor"]
 	changeHairColor = abs(color.r - c.r) < 0.01 or abs(color.g - c.g) < 0.01 or abs(color.b - c.b) < 0.01
 	#changeHairColor = color != Globals.get("player/hairColor")
 	updateCost()
@@ -113,33 +114,33 @@ func hairColorChanged( color ):
 func skinColorChanged( color ):
 	player.setSkin(color)
 
-	var c = Globals.get("player/skin")
+	var c = globals.player["skin"]
 	changeSkin = abs(color.r - c.r) < 0.01 or abs(color.g - c.g) < 0.01 or abs(color.b - c.b) < 0.01
 	#changeSkin = color != Globals.get("player/skin")
 	updateCost()
 
 func distanceRangeValueChanged( value ):
-	changeDistance = value - Globals.get("player/distance")
+	changeDistance = value - globals.player["distance"]
 	updateCost()
 
 func heightRangeValueChanged( value ):
-	changeHeight = value - Globals.get("player/height")
+	changeHeight = value - globals.player["height"]
 	updateCost()
 
 func speedRangeValueChanged( value ):
-	changeSpeed = value - Globals.get("player/speed")
+	changeSpeed = value - globals.player["speed"]
 	updateCost()
 
 func doneButtonPressed():
-	Globals.set("player/hair", hairStyleOption.get_selected_ID())
-	Globals.set("player/hairColor", hairColorPicker.color)
-	Globals.set("player/skin", skinColorPicker.color)
+	globals.player["hair"] = hairStyleOption.get_selected_ID()
+	globals.player["hairColor"] = hairColorPicker.color
+	globals.player["skin"] = skinColorPicker.color
 
-	Globals.set("player/distance", distanceRange.get_value())
-	Globals.set("player/height", heightRange.get_value())
-	Globals.set("player/speed", speedRange.get_value())
+	globals.player["distance"] = distanceRange.get_value()
+	globals.player["height"] = heightRange.get_value()
+	globals.player["speed"] = speedRange.get_value()
 
-	Globals.set("money", Globals.get("money") - cost)
+	globals.money -= cost
 
 	emit_signal("done")
 
@@ -150,9 +151,9 @@ func resetButtonPressed():
 	get_node("ResetDialog").popup()
 
 func resetDialogConfirmed():
-	Globals.set("player/distance", 0)
-	Globals.set("player/height", 0)
-	Globals.set("player/speed", 0)
+	globals.player["distance"] = 0
+	globals.player["height"] = 0
+	globals.player["speed"] = 0
 
 	distanceRange.set_value(0)
 	heightRange.set_value(0)
