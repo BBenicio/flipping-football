@@ -1,0 +1,170 @@
+[gd_scene load_steps=4 format=1]
+
+[ext_resource path="res://Themes/Menu.tres" type="Theme" id=1]
+[ext_resource path="res://Scripts/MainMenu.gd" type="Script" id=2]
+[ext_resource path="res://Fonts/Montserrat128.tres" type="DynamicFont" id=3]
+
+[node name="MainMenu" type="Control"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+theme/theme = ExtResource( 1 )
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 1920.0
+margin/bottom = 1080.0
+script/script = ExtResource( 2 )
+
+[node name="Title" type="Label" parent="."]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 418.0
+margin/top = 20.0
+margin/right = 1502.0
+margin/bottom = 220.0
+custom_fonts/font = ExtResource( 3 )
+text = "Flipping Football"
+align = 1
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="LeagueButton" type="Button" parent="."]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+theme/theme = ExtResource( 1 )
+margin/left = 310.0
+margin/top = 650.0
+margin/right = 710.0
+margin/bottom = 720.0
+toggle_mode = false
+enabled_focus_mode = 0
+shortcut = null
+text = "League"
+flat = false
+
+[node name="QuickMatchButton" type="Button" parent="."]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+theme/theme = ExtResource( 1 )
+margin/left = 760.0
+margin/top = 650.0
+margin/right = 1160.0
+margin/bottom = 720.0
+toggle_mode = false
+enabled_focus_mode = 0
+shortcut = null
+text = "Quick Match"
+flat = false
+
+[node name="MultiplayerButton" type="Button" parent="."]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+theme/theme = ExtResource( 1 )
+margin/left = 1210.0
+margin/top = 650.0
+margin/right = 1610.0
+margin/bottom = 720.0
+toggle_mode = false
+enabled_focus_mode = 0
+shortcut = null
+text = "Multiplayer"
+flat = false
+
+[node name="EditPlayerButton" type="Button" parent="."]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 1210.0
+margin/top = 750.0
+margin/right = 1610.0
+margin/bottom = 820.0
+toggle_mode = false
+enabled_focus_mode = 0
+shortcut = null
+text = "Edit Player"
+flat = false
+
+[node name="SettingsButton" type="Button" parent="."]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+theme/theme = ExtResource( 1 )
+margin/left = 760.0
+margin/top = 750.0
+margin/right = 1160.0
+margin/bottom = 820.0
+toggle_mode = false
+enabled_focus_mode = 0
+shortcut = null
+text = "Settings"
+flat = false
+
+[node name="EditKitButton" type="Button" parent="."]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+theme/theme = ExtResource( 1 )
+margin/left = 310.0
+margin/top = 750.0
+margin/right = 710.0
+margin/bottom = 820.0
+toggle_mode = false
+enabled_focus_mode = 0
+shortcut = null
+text = "Edit Team"
+flat = false
+
+[node name="QuitButton" type="Button" parent="."]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+theme/theme = ExtResource( 1 )
+margin/left = 760.0
+margin/top = 900.0
+margin/right = 1160.0
+margin/bottom = 970.0
+toggle_mode = false
+enabled_focus_mode = 0
+shortcut = null
+text = "Quit"
+flat = false
+
+[connection signal="pressed" from="LeagueButton" to="." method="leagueButtonPressed"]
+
+[connection signal="pressed" from="QuickMatchButton" to="." method="quickMatchButtonPressed"]
+
+[connection signal="pressed" from="MultiplayerButton" to="." method="multiplayerButtonPressed"]
+
+[connection signal="pressed" from="EditPlayerButton" to="." method="editPlayerButtonPressed"]
+
+[connection signal="pressed" from="SettingsButton" to="." method="settingsButtonPressed"]
+
+[connection signal="pressed" from="EditKitButton" to="." method="editKitButtonPressed"]
+
+[connection signal="pressed" from="QuitButton" to="." method="quitButtonPressed"]
+
+

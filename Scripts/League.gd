@@ -20,6 +20,8 @@ var nextMatch = 0
 var teamIndex = 1
 
 func _ready():
+	get_node("/root/Music").play()
+
 	moneyLabel = get_node("Money")
 	classification = get_node("Classification/ClassificationTable")
 	nextMatchButton = get_node("ControlPanel/NextMatchButton")
@@ -28,7 +30,7 @@ func _ready():
 	notification = get_node("Notification")
 	tween = get_node("Tween")
 
-	player = get_node("Player")
+	player = get_node("ControlPanel/Player")
 
 	globals = get_node("/root/GlobalHack")
 
@@ -96,7 +98,7 @@ func _ready():
 
 			globals.money += leaguePrize
 
-		nextMatch = globals.league["week"]
+		globals.league["week"] = nextMatch
 		teamIndex = globals.league["matches"][0][nextMatch]
 
 		globals.saveGame()

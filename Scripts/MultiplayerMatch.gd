@@ -15,13 +15,16 @@ enum {
 	GAME_OVER,
 	HOST_GOAL,
 	CLIENT_GOAL,
-	RESET_BALL
+	RESET_BALL,
+	REQUEST_PLAYER_INFO
 }
 
 const MATCH_TIME = 90
 
 export var ballUpdateInterval = 0.1
 export var timeout = 4
+
+export var indicatorDistance = 140
 
 var ballUpdate = 0
 var timeoutCounter = 0
@@ -54,6 +57,7 @@ var globals = null
 
 var thisPlayer = null
 var otherPlayer = null
+var otherDone = false
 
 var indicator = null
 
@@ -78,6 +82,9 @@ func send(code, data):
 func _ready():
 	globals = get_node("/root/GlobalHack")
 
+	get_node("/root/Music").stop()
+	get_node("Crowd").set_default_volume(globals.settings["soundVolume"])
+
 	ball = get_node("Ball")
 	timer = get_node("Goal Timer")
 	clock = get_node("HUD/Clock")
@@ -98,7 +105,7 @@ func _ready():
 		sender.set_send_address(ip, CLIENT_HOST_PORT)
 		reciever.listen(HOST_CLIENT_PORT)
 
-	send(PLAYER_INFO, globals.player)
+	send(REQUEST_PLAYER_INFO, null)
 
 	if host:
 		thisPlayer = get_node("Host")
@@ -113,7 +120,7 @@ func _ready():
 		thisPlayer.makeRightPlayer()
 
 	indicator = get_node("Indicator")
-	indicator.set_pos(Vector2(thisPlayer.get_pos().x, thisPlayer.get_pos().y - 120))
+	indicator.set_pos(Vector2(thisPlayer.get_pos().x, thisPlayer.get_pos().y - indicatorDistance))
 	var t = indicator.get_node("Tween")
 	t.interpolate_method(self, "indicatorFade", 1, 0, 1, Tween.TRANS_QUAD, Tween.EASE_IN, 5)
 	t.start()
@@ -134,16 +141,18 @@ func _ready():
 		lightTween.interpolate_property(light, "modulate", Color(1, 1, 1, 0), Color(1, 1, 1, 1), time, Tween.TRANS_QUAD, Tween.EASE_OUT, 2 * i * time)
 		lightTween.interpolate_property(light, "modulate", Color(1, 1, 1, 1), Color(1, 1, 1, 0), time, Tween.TRANS_QUAD, Tween.EASE_IN, (2 * i + 1) * time)
 
-	print("Waiting for player info")
-	reciever.wait()
-	var got = reciever.get_var()
-	if got["code"] == PLAYER_INFO:
-		doOther(got["data"])
-	else:
-		print("Got code ", got["code"], " when expecting code 0")
+	#print("Waiting for player info")
+	#reciever.wait()
+	#var got = reciever.get_var()
+	#if typeof(got) == TYPE_DICTIONARY and got["code"] == PLAYER_INFO:
+	#	doOther(got["data"])
+	#else:
+	#	print("Got code ", got["code"], " when expecting code 0")
 
-	if host:
-		setup()
+	#if host:
+	#	setup()
+
+	get_tree().set_pause(true)
 
 	set_process(true)
 	set_process_input(true)
@@ -151,6 +160,9 @@ func _ready():
 func setup():
 	if not started:
 		started = true
+
+		get_tree().set_pause(false)
+
 		get_node("Clock Timer").connect("timeout", self, "clockTick")
 		get_node("Clock Timer").start()
 
@@ -212,14 +224,20 @@ func clockTick():
 
 	if timeLeft >= 0:
 		clock.set_text(str(timeLeft))
+
 	if timeLeft == 0:
 		light.set_modulate(Color(1, 1, 1, 1))
 		if host:
+			get_node("Crowd").play("crowd_yes" if hostGoals > clientGoals else "crowd_no")
 			gameOver = true
 			send(GAME_OVER, null)
+		else:
+			get_node("Crowd").play("crowd_yes" if hostGoals < clientGoals else "crowd_no")
 	elif timeLeft == -timer.get_wait_time():
-		Globals.set("match/result", hostGoals - clientGoals)
+		var result = hostGoals - clientGoals
+		Globals.set("match/result", result if host else -result)
 		Globals.set("match/prizeGiven", false)
+		Globals.set("multiplayer/timeout", false)
 
 		get_tree().change_scene("res://Screens/Multiplayer.tscn")
 
@@ -232,10 +250,12 @@ func doOther(p):
 	otherPlayer.height = p["height"]
 	otherPlayer.speed = p["speed"]
 
+	otherDone = true
+
 func _process(delta):
 	indicator.set_pos(Vector2(thisPlayer.get_pos().x, thisPlayer.get_pos().y - 120))
 
-	if host:
+	if host and not get_tree().is_paused():
 		if ballLastPosition.distance_to(ball.get_pos()) < 30:
 			ballStillTime += delta
 			if ballStillTime >= 4:
@@ -275,16 +295,27 @@ func _process(delta):
 		sender.close()
 		reciever.close()
 
+		var result = hostGoals - clientGoals
+		Globals.set("match/result", result if host else -result)
+		Globals.set("match/prizeGiven", false)
+		Globals.set("multiplayer/timeout", true)
+
 		get_tree().change_scene("res://Screens/Multiplayer.tscn")
 
-	if not started:
-		send(PLAYER_INFO, globals.player)
+	if not otherDone:
+		send(REQUEST_PLAYER_INFO, null)
+	elif not started and host:
+		setup()
 
 func processRecievedData(got):
 	if got != null:
 		timeoutCounter = 0
 
 	while got != null:
+		if typeof(got) != TYPE_DICTIONARY:
+			got = reciever.get_var()
+			continue
+
 		if got["code"] == PLAYER_INFO:
 			doOther(got["data"])
 		if got["code"] == SETUP:
@@ -316,6 +347,8 @@ func processRecievedData(got):
 			ball.set_pos(Vector2(960, 300))
 			ball.set_linear_velocity(Vector2(0, 0))
 			ball.set_applied_force(Vector2(0, 0))
+		elif got["code"] == REQUEST_PLAYER_INFO:
+			send(PLAYER_INFO, globals.player)
 		else:
 			print(got["code"], ": unknown code")
 
@@ -330,12 +363,16 @@ func otherFlip(dir):
 
 func hostGoalBodyEnter( body ):
 	if body == ball and timer.get_time_left() <= 0 and not gameOver:
+		get_node("Crowd").play("crowd_no" if host else "crowd_yes")
+
 		clientGoals += 1
 		send(CLIENT_GOAL, clientGoals)
 		goal()
 
 func clientGoalBodyEnter( body ):
 	if body == ball and timer.get_time_left() <= 0 and not gameOver:
+		get_node("Crowd").play("crowd_yes" if host else "crowd_no")
+
 		hostGoals += 1
 		send(HOST_GOAL, hostGoals)
 		goal()

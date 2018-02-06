@@ -8,16 +8,14 @@
 [sub_resource type="ConvexPolygonShape2D" id=1]
 
 custom_solver_bias = 0.0
-points = Vector2Array( -75, -75, 150, -75, 150, 75, -75, 75, -150, 0 )
+points = Vector2Array( -150, -75, 150, -75, 150, 75, -150, 75 )
 
 [sub_resource type="ConvexPolygonShape2D" id=2]
 
 custom_solver_bias = 0.0
-points = Vector2Array( 75, -75, -150, -75, -150, 75, 75, 75, 150, 0 )
+points = Vector2Array( 150, -75, -150, -75, -150, 75, 150, 75 )
 
 [node name="MobileControls" type="Node"]
-
-editor/display_folded = true
 
 [node name="Left" type="TouchScreenButton" parent="."]
 

@@ -1,11 +1,22 @@
-[gd_scene load_steps=3 format=1]
+[gd_scene load_steps=6 format=1]
 
-[ext_resource path="res://Images/Ball.png" type="Texture" id=1]
+[ext_resource path="res://Scripts/Ball.gd" type="Script" id=1]
+[ext_resource path="res://Images/Ball.png" type="Texture" id=2]
+[ext_resource path="res://Sounds/ball.wav" type="Sample" id=3]
 
 [sub_resource type="CircleShape2D" id=1]
 
 custom_solver_bias = 0.0
 radius = 18.0
+
+[sub_resource type="SampleLibrary" id=2]
+
+samples/ball = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 3 )
+}
 
 [node name="Ball" type="RigidBody2D"]
 
@@ -22,23 +33,43 @@ bounce = 0.8
 gravity_scale = 3.0
 custom_integrator = false
 continuous_cd = 2
-contacts_reported = 0
-contact_monitor = false
+contacts_reported = 1
+contact_monitor = true
 sleeping = false
 can_sleep = false
 velocity/linear = Vector2( 0, 0 )
 velocity/angular = 0.0
 damp_override/linear = 0.0
 damp_override/angular = -1.0
+script/script = ExtResource( 1 )
+cosmetic = false
+soundInterval = 0.2
 
 [node name="Sprite" type="Sprite" parent="."]
 
-texture = ExtResource( 1 )
+texture = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 
 shape = SubResource( 1 )
 trigger = false
 _update_shape_index = 0
+
+[node name="Hit" type="SamplePlayer" parent="."]
+
+config/polyphony = 1
+config/samples = SubResource( 2 )
+default/volume_db = 0.0
+default/pitch_scale = 1.0
+default/pan = 0.0
+default/depth = 0.0
+default/height = 0.0
+default/filter/type = 0
+default/filter/cutoff = 5000.0
+default/filter/resonance = 1.0
+default/filter/gain = 1.0
+default/reverb_room = 2
+default/reverb_send = 0.0
+default/chorus_send = 0.0
 
 

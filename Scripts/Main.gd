@@ -2,6 +2,8 @@ extends Node
 
 const MATCH_TIME = 90
 
+export var indicatorDistance = 140
+
 var ball = null
 var leftPlayer = null
 var rightPlayer = null
@@ -36,6 +38,9 @@ func _ready():
 	randomize()
 
 	globals = get_node("/root/GlobalHack")
+
+	get_node("/root/Music").stop()
+	get_node("Crowd").set_default_volume(globals.settings["soundVolume"])
 
 	ball = get_node("Ball")
 	leftPlayer = get_node("Left Player")
@@ -130,7 +135,7 @@ func indicatorFade(a):
 	indicator.set_modulate(Color(1, 1, 1, a))
 
 func _fixed_process(delta):
-	indicator.set_pos(Vector2(leftPlayer.get_pos().x, leftPlayer.get_pos().y - 120))
+	indicator.set_pos(Vector2(leftPlayer.get_pos().x, leftPlayer.get_pos().y - indicatorDistance))
 
 	if ballLastPosition.distance_to(ball.get_pos()) < 30:
 		ballStillTime += delta
@@ -179,11 +184,15 @@ func start_ball():
 
 func _on_Left_Goal_body_enter( body ):
 	if body == ball and timer.get_time_left() <= 0 and not gameOver:
+		get_node("Crowd").play("crowd_no")
+
 		rightGoals += 1
 		goal()
 
 func _on_Right_Goal_body_enter( body ):
 	if body == ball and timer.get_time_left() <= 0 and not gameOver:
+		get_node("Crowd").play("crowd_yes")
+
 		leftGoals += 1
 		goal()
 
@@ -203,11 +212,14 @@ func clockTick():
 
 	if timeLeft >= 0:
 		clock.set_text(str(timeLeft))
+
 	if timeLeft == 0:
 		if not Globals.get("quickMatch"):
 			timer.start()
 		gameOver = true
 		light.set_modulate(Color(1, 1, 1, 1))
+
+		get_node("Crowd").play("crowd_yes" if leftGoals > rightGoals else "crowd_no")
 	elif timeLeft == -timer.get_wait_time():
 		Globals.set("match/result", leftGoals - rightGoals)
 		Globals.set("match/prizeGiven", false)

@@ -14,6 +14,10 @@ var trying = false
 var counter = 0
 var timeoutCounter = 0
 
+var tween = null
+var notification = null
+var moneyLabel = null
+
 func encodeIP(ip):
 	var encoded = ""
 	for cell in ip.split("."):
@@ -57,14 +61,50 @@ func _ready():
 
 		if first == 10 or (first == 172 and second >= 16 and second <= 31) or (first == 192 and second == 168):
 			ip = i
-			print("Using ", ip)
-			break
+			print("Found ", ip)
+			#break
+
+	print("Using ", ip)
 
 	globals = get_node("/root/GlobalHack")
 
 	get_node("Menu/Code Panel/Code").set_text(encodeIP(ip))
 
 	packetPeer.listen(PORT)
+
+	tween = get_node("Menu/Tween")
+	notification = get_node("Notification")
+	moneyLabel = get_node("Money")
+
+	tween.interpolate_property(get_node("Menu"), "rect/pos", Vector2(1920, 0), Vector2(0, 0), 0.5, Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
+	tween.start()
+
+	if Globals.has("match/result") and not Globals.get("match/prizeGiven"):
+		var r = Globals.get("match/result")
+		var prize = 10
+		var text = " for that "
+
+		if r < 0:
+			prize /= 2
+			text += "loss"
+		elif r > 0:
+			prize += prize + 2 * r
+			text += "win"
+		else:
+			text += "draw"
+
+		if Globals.get("multiplayer/timeout"):
+			prize /= 2
+			text += ". Your prize was halved because the match did not finish"
+			notification.time = 5
+
+		notification.set_text("You earned $ " + str(prize) + text)
+		notification.pop()
+
+		globals.money += prize
+
+		Globals.set("match/prizeGiven", true)
+	moneyLabel.set_text("$ " + str(globals.money))
 
 	set_fixed_process(true)
 
@@ -81,6 +121,7 @@ func _fixed_process(delta):
 			trying = false
 
 			get_node("Menu/Join Panel/JoinButton").set_disabled(false)
+			get_node("Menu/MenuButton").set_disabled(false)
 		elif counter >= interval:
 			counter = 0
 			print(".")
@@ -105,12 +146,14 @@ func _fixed_process(delta):
 
 		print(ip, " as CLIENT")
 		get_tree().change_scene("res://Screens/MultiplayerMatch.tscn")
+	elif join != null:
+		print("> ", join)
 
 func joinButtonPressed():
 	var ip = decodeIP(get_node("Menu/Join Panel/Code").get_text())
 
 	if not ip.is_valid_ip_address():
-		print(ip, " n eh um ip valido o doidao")
+		print(ip, " is not a valid ip")
 		trying = false
 		return
 
@@ -119,3 +162,20 @@ func joinButtonPressed():
 	trying = true
 
 	get_node("Menu/Join Panel/JoinButton").set_disabled(true)
+	get_node("Menu/MenuButton").set_disabled(true)
+
+func menuButtonPressed():
+	packetPeer.close()
+
+	tween.interpolate_property(get_node("Menu"), "rect/pos", Vector2(0, 0), Vector2(1920, 0), 0.5, Tween.TRANS_QUAD, Tween.EASE_IN_OUT)
+	tween.connect("tween_complete", self, "menu")
+	tween.start()
+
+func menu(a, b):
+	get_tree().change_scene("res://Screens/Menu.tscn")
+
+func codeTextChanged( text ):
+	var c = get_node("Menu/Join Panel/Code")
+	var pos = c.get_cursor_pos()
+	c.set_text(text.to_lower())
+	c.set_cursor_pos(pos)

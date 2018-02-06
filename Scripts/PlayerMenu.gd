@@ -86,6 +86,7 @@ func setup():
 
 func updateCost():
 	cost = UPGRADE_COST * (changeDistance + changeHeight + changeSpeed)
+
 	if changeSkin: cost += CHANGE_COST
 	if changeHairStyle: cost += CHANGE_COST
 	if changeHairColor: cost += CHANGE_COST
@@ -107,16 +108,14 @@ func hairColorChanged( color ):
 	player.setHair(null, color)
 
 	var c = globals.player["hairColor"]
-	changeHairColor = abs(color.r - c.r) < 0.01 or abs(color.g - c.g) < 0.01 or abs(color.b - c.b) < 0.01
-	#changeHairColor = color != Globals.get("player/hairColor")
+	changeHairColor = abs(color.r - c.r) > 0.01 or abs(color.g - c.g) > 0.01 or abs(color.b - c.b) > 0.01
 	updateCost()
 
 func skinColorChanged( color ):
 	player.setSkin(color)
 
 	var c = globals.player["skin"]
-	changeSkin = abs(color.r - c.r) < 0.01 or abs(color.g - c.g) < 0.01 or abs(color.b - c.b) < 0.01
-	#changeSkin = color != Globals.get("player/skin")
+	changeSkin = abs(color.r - c.r) > 0.01 or abs(color.g - c.g) > 0.01 or abs(color.b - c.b) > 0.01
 	updateCost()
 
 func distanceRangeValueChanged( value ):

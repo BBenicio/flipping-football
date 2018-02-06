@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=1]
+[gd_scene load_steps=6 format=1]
 
 [ext_resource path="res://Scripts/Multiplayer.gd" type="Script" id=1]
 [ext_resource path="res://Objects/Background.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Themes/Menu.tres" type="Theme" id=3]
+[ext_resource path="res://Objects/Notification.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Images/Money.png" type="Texture" id=5]
 
 [node name="Multiplayer" type="Node"]
 
@@ -19,13 +21,31 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 theme/theme = ExtResource( 3 )
-margin/left = 0.0
+margin/left = 1920.0
 margin/top = 0.0
-margin/right = 1920.0
+margin/right = 3840.0
 margin/bottom = 1080.0
+
+[node name="Title" type="Label" parent="Menu"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 710.0
+margin/top = 100.0
+margin/right = 1210.0
+margin/bottom = 160.0
+text = "Local Multiplayer"
+align = 1
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
 
 [node name="Code Panel" type="Panel" parent="Menu"]
 
+editor/display_folded = true
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -43,9 +63,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
 margin/left = 0.0
-margin/top = 0.0
+margin/top = 10.0
 margin/right = 0.0
-margin/bottom = 60.0
+margin/bottom = 70.0
 text = "Your Code"
 align = 1
 autowrap = true
@@ -80,9 +100,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 560.0
-margin/top = 500.0
+margin/top = 420.0
 margin/right = 1360.0
-margin/bottom = 800.0
+margin/bottom = 720.0
 
 [node name="Title" type="Label" parent="Menu/Join Panel"]
 
@@ -92,9 +112,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
 margin/left = 0.0
-margin/top = 0.0
+margin/top = 10.0
 margin/right = 0.0
-margin/bottom = 60.0
+margin/bottom = 70.0
 text = "Join Game"
 align = 1
 autowrap = true
@@ -138,6 +158,64 @@ shortcut = null
 text = "Join"
 flat = false
 
+[node name="MenuButton" type="Button" parent="Menu"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 560.0
+margin/top = 900.0
+margin/right = 1360.0
+margin/bottom = 1000.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "Back To Menu"
+flat = false
+
+[node name="Tween" type="Tween" parent="Menu"]
+
+playback/process_mode = 1
+playback/active = false
+playback/repeat = false
+playback/speed = 1.0
+
+[node name="Notification" parent="." instance=ExtResource( 4 )]
+
+margin/left = -960.0
+margin/top = 800.0
+margin/right = 0.0
+margin/bottom = 1000.0
+icon = ExtResource( 5 )
+from = Vector2( -960, 800 )
+to = Vector2( 0, 800 )
+time = 1.5
+delay = 0.5
+
+[node name="Money" type="Label" parent="."]
+
+anchor/top = 1
+anchor/bottom = 1
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+theme/theme = ExtResource( 3 )
+margin/left = 10.0
+margin/top = 80.0
+margin/right = 210.0
+margin/bottom = 10.0
+text = "$ 100"
+valign = 2
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[connection signal="text_changed" from="Menu/Join Panel/Code" to="." method="codeTextChanged"]
+
 [connection signal="pressed" from="Menu/Join Panel/JoinButton" to="." method="joinButtonPressed"]
+
+[connection signal="pressed" from="Menu/MenuButton" to="." method="menuButtonPressed"]
 
 

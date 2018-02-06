@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=1]
+[gd_scene load_steps=21 format=1]
 
 [ext_resource path="res://Scripts/Main.gd" type="Script" id=1]
 [ext_resource path="res://Images/Background.png" type="Texture" id=2]
@@ -12,30 +12,19 @@
 [ext_resource path="res://Objects/Goal.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Fonts/Montserrat48.tres" type="DynamicFont" id=11]
 [ext_resource path="res://Fonts/Montserrat128.tres" type="DynamicFont" id=12]
-[ext_resource path="res://Images/LeftButton.png" type="Texture" id=13]
-[ext_resource path="res://Images/LeftButtonPressed.png" type="Texture" id=14]
-[ext_resource path="res://Images/RightButton.png" type="Texture" id=15]
-[ext_resource path="res://Images/RightButtonPressed.png" type="Texture" id=16]
-[ext_resource path="res://Objects/FPSLabel.tscn" type="PackedScene" id=17]
-[ext_resource path="res://Scripts/Pause.gd" type="Script" id=18]
-[ext_resource path="res://Images/Tint.png" type="Texture" id=19]
-[ext_resource path="res://Images/Pause.png" type="Texture" id=20]
-[ext_resource path="res://Images/Play.png" type="Texture" id=21]
-[ext_resource path="res://Themes/Menu.tres" type="Theme" id=22]
-
-[sub_resource type="ConvexPolygonShape2D" id=1]
-
-custom_solver_bias = 0.0
-points = Vector2Array( -75, -75, 150, -75, 150, 75, -75, 75, -150, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=2]
-
-custom_solver_bias = 0.0
-points = Vector2Array( 75, -75, -150, -75, -150, 75, 75, 75, 150, 0 )
+[ext_resource path="res://Objects/MobileControls.tscn" type="PackedScene" id=13]
+[ext_resource path="res://Objects/FPSLabel.tscn" type="PackedScene" id=14]
+[ext_resource path="res://Scripts/Pause.gd" type="Script" id=15]
+[ext_resource path="res://Images/Tint.png" type="Texture" id=16]
+[ext_resource path="res://Images/Pause.png" type="Texture" id=17]
+[ext_resource path="res://Images/Play.png" type="Texture" id=18]
+[ext_resource path="res://Themes/Menu.tres" type="Theme" id=19]
+[ext_resource path="res://Sounds/SampleLibrary.tres" type="SampleLibrary" id=20]
 
 [node name="Main" type="Node"]
 
 script/script = ExtResource( 1 )
+indicatorDistance = 140
 
 [node name="Bg" type="Sprite" parent="."]
 
@@ -68,7 +57,8 @@ damp_override/angular = 0.0
 
 [node name="Indicator" type="Sprite" parent="."]
 
-transform/pos = Vector2( 450, 664 )
+editor/display_folded = true
+transform/pos = Vector2( 450, 644 )
 texture = ExtResource( 7 )
 
 [node name="Tween" type="Tween" parent="Indicator"]
@@ -181,37 +171,9 @@ playback/active = false
 playback/repeat = false
 playback/speed = 1.0
 
-[node name="MobileControls" type="Node" parent="."]
+[node name="MobileControls" parent="." instance=ExtResource( 13 )]
 
-editor/display_folded = true
-
-[node name="Left" type="TouchScreenButton" parent="MobileControls"]
-
-transform/pos = Vector2( 200, 880 )
-normal = ExtResource( 13 )
-pressed = ExtResource( 14 )
-bitmask = null
-shape = SubResource( 1 )
-shape_centered = true
-shape_visible = true
-passby_press = false
-action = "left"
-visibility_mode = 1
-
-[node name="Right" type="TouchScreenButton" parent="MobileControls"]
-
-transform/pos = Vector2( 1414, 880 )
-normal = ExtResource( 15 )
-pressed = ExtResource( 16 )
-bitmask = null
-shape = SubResource( 2 )
-shape_centered = true
-shape_visible = true
-passby_press = false
-action = "right"
-visibility_mode = 1
-
-[node name="FPS" parent="." instance=ExtResource( 17 )]
+[node name="FPS" parent="." instance=ExtResource( 14 )]
 
 timeout = 0.5
 
@@ -219,7 +181,7 @@ timeout = 0.5
 
 process/pause_mode = 2
 editor/display_folded = true
-script/script = ExtResource( 18 )
+script/script = ExtResource( 15 )
 
 [node name="Tint" type="TextureFrame" parent="PauseThings"]
 
@@ -231,7 +193,7 @@ margin/left = 0.0
 margin/top = 0.0
 margin/right = 1920.0
 margin/bottom = 1080.0
-texture = ExtResource( 19 )
+texture = ExtResource( 16 )
 modulate = Color( 1, 1, 1, 0 )
 expand = true
 stretch_mode = 0
@@ -249,8 +211,8 @@ margin/bottom = 80.0
 toggle_mode = true
 enabled_focus_mode = 0
 shortcut = null
-textures/normal = ExtResource( 20 )
-textures/pressed = ExtResource( 21 )
+textures/normal = ExtResource( 17 )
+textures/pressed = ExtResource( 18 )
 params/resize_mode = 0
 params/stretch_mode = 0
 
@@ -305,7 +267,7 @@ focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
-theme/theme = ExtResource( 22 )
+theme/theme = ExtResource( 19 )
 margin/left = 200.0
 margin/top = 50.0
 margin/right = -200.0
@@ -326,7 +288,7 @@ focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
-theme/theme = ExtResource( 22 )
+theme/theme = ExtResource( 19 )
 margin/left = 200.0
 margin/top = -70.0
 margin/right = -200.0
@@ -336,6 +298,23 @@ enabled_focus_mode = 0
 shortcut = null
 text = "Back to Menu"
 flat = false
+
+[node name="Crowd" type="SamplePlayer" parent="."]
+
+config/polyphony = 1
+config/samples = ExtResource( 20 )
+default/volume_db = 0.0
+default/pitch_scale = 1.0
+default/pan = 0.0
+default/depth = 0.0
+default/height = 0.0
+default/filter/type = 0
+default/filter/cutoff = 5000.0
+default/filter/resonance = 1.0
+default/filter/gain = 1.0
+default/reverb_room = 2
+default/reverb_send = 0.0
+default/chorus_send = 0.0
 
 [connection signal="body_enter" from="Left Goal" to="." method="_on_Left_Goal_body_enter"]
 

@@ -1,8 +1,10 @@
 extends Node
 
-const VERSION = 3
+const VERSION = 4
 const SAVE_FILE = "user://savegame.sav"
 const PASS = "io.benic.flippingfootball"
+
+const SETTINGS_FILE = "user://settings.cfg"
 
 var player = {
 	skin = Color("ffb380"),
@@ -26,6 +28,12 @@ var league = {
 }
 
 var money = 100
+
+var settings = {
+	musicVolume = 1,
+	soundVolume = 1,
+	fullscreen = false,
+}
 
 func _ready():
 	if VERSION == 3:
@@ -66,13 +74,16 @@ func _ready():
 
 			money = Globals.get("money")
 
-		loadGame()
+	loadGame()
 
-		if league["table"] == null:
-			resetLeague()
-			resetMatches()
+	if league["table"] == null:
+		resetLeague()
+		resetMatches()
 
-		saveGame()
+	saveGame()
+
+	loadSettings()
+	saveSettings()
 
 func resetLeague():
 	var file = File.new()
@@ -153,3 +164,22 @@ func loadGame():
 func colorFromCsv(csv):
 	var arr = csv.split_floats(",")
 	return Color(arr[0], arr[1], arr[2], arr[3])
+
+func loadSettings():
+	var file = ConfigFile.new()
+	if file.load(SETTINGS_FILE) == OK:
+		settings["soundVolume"] = file.get_value("sound", "sfx", settings["soundVolume"])
+		settings["musicVolume"] = file.get_value("sound", "music", settings["musicVolume"])
+		settings["fullscreen"] = file.get_value("display", "fullscreen", settings["fullscreen"])
+
+		OS.set_window_fullscreen(settings["fullscreen"])
+
+func saveSettings():
+	var file = ConfigFile.new()
+
+	file.set_value("sound", "sfx", settings["soundVolume"])
+	file.set_value("sound", "music", settings["musicVolume"])
+	file.set_value("display", "fullscreen", settings["fullscreen"])
+
+	if file.save(SETTINGS_FILE) != OK:
+		print("There was an error saving the settings. I don't really know what to do now")

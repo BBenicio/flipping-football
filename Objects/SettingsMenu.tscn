@@ -1,0 +1,191 @@
+[gd_scene load_steps=3 format=1]
+
+[ext_resource path="res://Themes/Menu.tres" type="Theme" id=1]
+[ext_resource path="res://Scripts/SettingsMenu.gd" type="Script" id=2]
+
+[node name="SettingsMenu" type="Control"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+theme/theme = ExtResource( 1 )
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 1920.0
+margin/bottom = 1080.0
+script/script = ExtResource( 2 )
+
+[node name="Panel" type="Panel" parent="."]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 550.0
+margin/top = 150.0
+margin/right = 1370.0
+margin/bottom = 720.0
+
+[node name="SfxLabel" type="Label" parent="Panel"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 212.0
+margin/top = 20.0
+margin/right = 612.0
+margin/bottom = 80.0
+text = "Effects Volume"
+align = 1
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="SfxSlider" type="HSlider" parent="Panel"]
+
+anchor/right = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 22.0
+margin/top = 110.0
+margin/right = 18.0
+margin/bottom = 170.0
+range/min = 0.0
+range/max = 1.0
+range/step = 0.01
+range/page = 0.0
+range/value = 1.0
+range/exp_edit = false
+range/rounded = false
+tick_count = 0
+ticks_on_borders = false
+focus_mode = 2
+
+[node name="MusicLabel" type="Label" parent="Panel"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 212.0
+margin/top = 220.0
+margin/right = 612.0
+margin/bottom = 280.0
+text = "Music Volume"
+align = 1
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="MusicSlider" type="HSlider" parent="Panel"]
+
+anchor/top = 1
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 22.0
+margin/top = 260.0
+margin/right = 18.0
+margin/bottom = 200.0
+range/min = 0.0
+range/max = 1.0
+range/step = 0.01
+range/page = 0.0
+range/value = 1.0
+range/exp_edit = false
+range/rounded = false
+tick_count = 0
+ticks_on_borders = false
+focus_mode = 2
+
+[node name="Fullscreen" type="CheckButton" parent="Panel"]
+
+anchor/top = 1
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 24.0
+margin/top = 126.0
+margin/right = 16.0
+margin/bottom = 56.0
+toggle_mode = true
+enabled_focus_mode = 0
+shortcut = null
+text = "Fullscreen"
+flat = false
+align = 0
+
+[node name="CancelButton" type="Button" parent="."]
+
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 550.0
+margin/top = 750.0
+margin/right = 970.0
+margin/bottom = 260.0
+toggle_mode = false
+enabled_focus_mode = 0
+shortcut = null
+text = "Cancel"
+flat = false
+
+[node name="DoneButton" type="Button" parent="."]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 970.0
+margin/top = 750.0
+margin/right = 1370.0
+margin/bottom = 820.0
+toggle_mode = false
+enabled_focus_mode = 0
+shortcut = null
+text = "Done"
+flat = false
+
+[node name="Title" type="Label" parent="."]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 760.0
+margin/top = 50.0
+margin/right = 1160.0
+margin/bottom = 110.0
+text = "Settings"
+align = 1
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[connection signal="value_changed" from="Panel/SfxSlider" to="." method="sfxSliderValueChanged"]
+
+[connection signal="value_changed" from="Panel/MusicSlider" to="." method="musicSliderValueChanged"]
+
+[connection signal="toggled" from="Panel/Fullscreen" to="." method="fullscreenToggled"]
+
+[connection signal="pressed" from="CancelButton" to="." method="cancelButtonPressed"]
+
+[connection signal="pressed" from="DoneButton" to="." method="doneButtonPressed"]
+
+

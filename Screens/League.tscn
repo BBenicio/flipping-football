@@ -156,16 +156,18 @@ shortcut = null
 text = "Back to Menu"
 flat = false
 
+[node name="Player" parent="ControlPanel" instance=ExtResource( 5 )]
+
+transform/pos = Vector2( 450, 784 )
+collision/layers = 0
+collision/mask = 0
+
 [node name="Tween" type="Tween" parent="."]
 
 playback/process_mode = 1
 playback/active = false
 playback/repeat = false
 playback/speed = 1.0
-
-[node name="Player" parent="." instance=ExtResource( 5 )]
-
-transform/pos = Vector2( 450, 780 )
 
 [node name="Notification" parent="." instance=ExtResource( 6 )]
 

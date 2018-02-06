@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=30 format=1]
+[gd_resource type="Theme" load_steps=31 format=1]
 
 [ext_resource path="res://Fonts/Montserrat48.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Themes/ButtonDisabled.tres" type="StyleBox" id=2]
@@ -6,18 +6,19 @@
 [ext_resource path="res://Themes/ButtonHover.tres" type="StyleBox" id=4]
 [ext_resource path="res://Themes/ButtonNormal.tres" type="StyleBox" id=5]
 [ext_resource path="res://Themes/ButtonPressed.tres" type="StyleBox" id=6]
-[ext_resource path="res://Images/SliderGrabber.png" type="Texture" id=7]
-[ext_resource path="res://Images/SliderGrabberHilite.png" type="Texture" id=8]
-[ext_resource path="res://Images/LineEdit.png" type="Texture" id=9]
-[ext_resource path="res://Images/Check.png" type="Texture" id=10]
-[ext_resource path="res://Images/Nothing.png" type="Texture" id=11]
+[ext_resource path="res://Images/Nothing.png" type="Texture" id=7]
+[ext_resource path="res://Images/CheckV.png" type="Texture" id=8]
+[ext_resource path="res://Images/SliderGrabber.png" type="Texture" id=9]
+[ext_resource path="res://Images/SliderGrabberHilite.png" type="Texture" id=10]
+[ext_resource path="res://Images/LineEdit.png" type="Texture" id=11]
+[ext_resource path="res://Images/Check.png" type="Texture" id=12]
 
 [sub_resource type="StyleBoxFlat" id=1]
 
 content_margin/left = -1.0
 content_margin/right = -1.0
-content_margin/top = -1.0
-content_margin/bottom = -1.0
+content_margin/top = 25.0
+content_margin/bottom = 25.0
 bg_color = Color( 0.501961, 0.501961, 0.501961, 1 )
 light_color = Color( 0.25098, 0.25098, 0.25098, 1 )
 dark_color = Color( 0.25098, 0.25098, 0.25098, 1 )
@@ -29,12 +30,12 @@ draw_bg = true
 
 content_margin/left = -1.0
 content_margin/right = -1.0
-content_margin/top = -1.0
-content_margin/bottom = -1.0
-bg_color = Color( 0.501961, 0.501961, 0.501961, 1 )
+content_margin/top = 25.0
+content_margin/bottom = 25.0
+bg_color = Color( 0.25098, 0.25098, 0.25098, 1 )
 light_color = Color( 0, 0, 0, 1 )
 dark_color = Color( 0, 0, 0, 1 )
-border_size = 20
+border_size = 2
 border_blend = false
 draw_bg = true
 
@@ -44,7 +45,7 @@ content_margin/left = -1.0
 content_margin/right = -1.0
 content_margin/top = -1.0
 content_margin/bottom = -1.0
-texture = ExtResource( 9 )
+texture = ExtResource( 11 )
 region_rect = Rect2( 32, 0, 32, 0 )
 margin/left = 0.0
 margin/right = 0.0
@@ -62,7 +63,7 @@ content_margin/left = -1.0
 content_margin/right = -1.0
 content_margin/top = -1.0
 content_margin/bottom = -1.0
-texture = ExtResource( 9 )
+texture = ExtResource( 11 )
 region_rect = Rect2( 0, 0, 32, 32 )
 margin/left = 0.0
 margin/right = 0.0
@@ -270,8 +271,22 @@ Button/styles/focus = ExtResource( 3 )
 Button/styles/hover = ExtResource( 4 )
 Button/styles/normal = ExtResource( 5 )
 Button/styles/pressed = ExtResource( 6 )
-HSlider/icons/grabber = ExtResource( 7 )
-HSlider/icons/grabber_hilite = ExtResource( 8 )
+CheckButton/colors/font_color = Color( 0.878431, 0.878431, 0.878431, 1 )
+CheckButton/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
+CheckButton/colors/font_color_hover = Color( 0.941176, 0.941176, 0.941176, 1 )
+CheckButton/colors/font_color_pressed = Color( 1, 1, 1, 1 )
+CheckButton/constants/check_vadjust = 0
+CheckButton/constants/hseparation = 4
+CheckButton/fonts/font = null
+CheckButton/icons/off = ExtResource( 7 )
+CheckButton/icons/on = ExtResource( 8 )
+CheckButton/styles/disabled = ExtResource( 2 )
+CheckButton/styles/focus = ExtResource( 3 )
+CheckButton/styles/hover = ExtResource( 4 )
+CheckButton/styles/normal = ExtResource( 5 )
+CheckButton/styles/pressed = ExtResource( 5 )
+HSlider/icons/grabber = ExtResource( 9 )
+HSlider/icons/grabber_hilite = ExtResource( 10 )
 HSlider/icons/tick = null
 HSlider/styles/focus = SubResource( 1 )
 HSlider/styles/grabber_hilite = null
@@ -308,9 +323,9 @@ PopupMenu/colors/font_color_hover = Color( 0.878431, 0.878431, 0.878431, 1 )
 PopupMenu/constants/hseparation = 4
 PopupMenu/constants/vseparation = 4
 PopupMenu/fonts/font = null
-PopupMenu/icons/checked = ExtResource( 10 )
+PopupMenu/icons/checked = ExtResource( 12 )
 PopupMenu/icons/submenu = null
-PopupMenu/icons/unchecked = ExtResource( 11 )
+PopupMenu/icons/unchecked = ExtResource( 7 )
 PopupMenu/styles/hover = SubResource( 6 )
 PopupMenu/styles/panel = SubResource( 7 )
 PopupMenu/styles/panel_disabled = null
@@ -352,7 +367,7 @@ WindowDialog/constants/close_v_ofs = 24
 WindowDialog/constants/title_height = 70
 WindowDialog/constants/titlebar_height = 70
 WindowDialog/fonts/title_font = null
-WindowDialog/icons/close = ExtResource( 11 )
-WindowDialog/icons/close_hilite = ExtResource( 11 )
+WindowDialog/icons/close = ExtResource( 7 )
+WindowDialog/icons/close_hilite = ExtResource( 7 )
 WindowDialog/styles/panel = SubResource( 18 )
 

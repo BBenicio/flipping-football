@@ -1,0 +1,20 @@
+[gd_resource type="SampleLibrary" load_steps=3 format=1]
+
+[ext_resource path="res://Sounds/crowd_no.wav" type="Sample" id=1]
+[ext_resource path="res://Sounds/crowd_yes.wav" type="Sample" id=2]
+
+[resource]
+
+samples/crowd_no = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 1 )
+}
+samples/crowd_yes = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 2 )
+}
+

@@ -5,6 +5,8 @@ const TRANSITION_TIME = 0.5
 var mainMenu = null
 var kitMenu = null
 var playerMenu = null
+var settingsMenu = null
+
 var tween = null
 var moneyLabel = null
 
@@ -13,9 +15,13 @@ var notification = null
 var globals = null
 
 func _ready():
+	get_node("/root/Music").play()
+
 	mainMenu = get_node("MainMenu")
 	kitMenu = get_node("KitMenu")
 	playerMenu = get_node("PlayerMenu")
+	settingsMenu = get_node("SettingsMenu")
+
 	tween = get_node("Tween")
 	moneyLabel = get_node("Money")
 
@@ -51,23 +57,23 @@ func _ready():
 		Globals.set("match/prizeGiven", true)
 
 
-func quickMatch(a, b):
+func quickMatchCallback(a, b):
 	Globals.set("quickMatch", true)
 	get_tree().change_scene("res://Screens/Main.tscn")
 
-func quickMatchButtonPressed():
+func quickMatch():
 	tween.interpolate_property(mainMenu, "rect/pos", mainMenu.get_pos(), Vector2(1920, 0), TRANSITION_TIME, Tween.TRANS_QUAD, Tween.EASE_OUT)
-	tween.connect("tween_complete", self, "quickMatch")
+	tween.connect("tween_complete", self, "quickMatchCallback")
 	tween.start()
 
-func changeKitButtonPressed():
+func editKit():
 	kitMenu.setup()
 
 	tween.interpolate_property(mainMenu, "rect/pos", mainMenu.get_pos(), Vector2(1920, 0), TRANSITION_TIME, Tween.TRANS_QUAD, Tween.EASE_OUT)
 	tween.interpolate_property(kitMenu, "rect/pos", kitMenu.get_pos(), Vector2(0, 0), TRANSITION_TIME, Tween.TRANS_QUAD, Tween.EASE_OUT, TRANSITION_TIME)
 	tween.start()
 
-func editPlayerButtonPressed():
+func editPlayer():
 	playerMenu.setup()
 
 	tween.interpolate_property(mainMenu, "rect/pos", mainMenu.get_pos(), Vector2(1920, 0), TRANSITION_TIME, Tween.TRANS_QUAD, Tween.EASE_OUT)
@@ -92,18 +98,30 @@ func playerMenuDone():
 
 	globals.saveGame()
 
-func leagueButtonPressed():
+func league():
 	tween.interpolate_property(mainMenu, "rect/pos", mainMenu.get_pos(), Vector2(1920, 0), TRANSITION_TIME, Tween.TRANS_QUAD, Tween.EASE_OUT)
-	tween.connect("tween_complete", self, "league")
+	tween.connect("tween_complete", self, "leagueCallback")
 	tween.start()
 
-func league(a, b):
+func leagueCallback(a, b):
 	get_tree().change_scene("res://Screens/League.tscn")
 
-func multiplayerButtonPressed():
+func multiplayer():
 	tween.interpolate_property(mainMenu, "rect/pos", mainMenu.get_pos(), Vector2(1920, 0), TRANSITION_TIME, Tween.TRANS_QUAD, Tween.EASE_OUT)
-	tween.connect("tween_complete", self, "multiplayer")
+	tween.connect("tween_complete", self, "multiplayerCallback")
 	tween.start()
 
-func multiplayer(a, b):
+func multiplayerCallback(a, b):
 	get_tree().change_scene("res://Screens/Multiplayer.tscn")
+
+func settingsMenuDone():
+	tween.interpolate_property(mainMenu, "rect/pos", mainMenu.get_pos(), Vector2(0, 0), TRANSITION_TIME, Tween.TRANS_QUAD, Tween.EASE_OUT, TRANSITION_TIME)
+	tween.interpolate_property(settingsMenu, "rect/pos", settingsMenu.get_pos(), Vector2(1920, 0), TRANSITION_TIME, Tween.TRANS_QUAD, Tween.EASE_OUT)
+	tween.start()
+
+func settings():
+	tween.interpolate_property(mainMenu, "rect/pos", mainMenu.get_pos(), Vector2(1920, 0), TRANSITION_TIME, Tween.TRANS_QUAD, Tween.EASE_OUT)
+	tween.interpolate_property(settingsMenu, "rect/pos", settingsMenu.get_pos(), Vector2(0, 0), TRANSITION_TIME, Tween.TRANS_QUAD, Tween.EASE_OUT, TRANSITION_TIME)
+	tween.start()
+
+	settingsMenu.setup()
